@@ -1,11 +1,2 @@
-<script lang="ts" setup>
-
-</script>
-
-<template>
-
-</template>
-
-<style scoped>
-
-</style>
+<template>day</template>
+<script lang="ts" setup></script>

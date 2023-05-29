@@ -7,6 +7,9 @@ interface CalendarState {
   currentSelectData: number;
   currentTypeShow: TypeShowCalendar.TypeCalendar;
   currentYear: number;
+  stateModalWindow: boolean;
+  calendarItemsTime: Array<CalendarTypes.CalendarTime> | [];
+  calendarItemTime: CalendarTypes.CalendarTime | null;
 }
 
 export const useStore = defineStore('store', {
@@ -14,14 +17,17 @@ export const useStore = defineStore('store', {
         currentSelectData: 0,
         currentTypeShow: TypeShowCalendar.TypeCalendar.Month,
         currentYear: 0,
+        stateModalWindow: false,
+        calendarItemsTime: [],
+        calendarItemTime: null,
     }),
     getters: {
         getMountForSelectData(state): moment.Moment {
             return moment()
                 .subtract(-state.currentSelectData, state.currentTypeShow);
         },
-        getDaysForMonth(): Array<CalendarTypes.CalendarItems> {
-            const daysList: Array<CalendarTypes.CalendarItems> = [];
+        getDaysForMonth(): Array<CalendarTypes.CalendarItem> {
+            const daysList: Array<CalendarTypes.CalendarItem> = [];
             let id = 0;
             const daysCount: number = this.getMountForSelectData.daysInMonth();
             const nowYear: number = this.getMountForSelectData.year();
@@ -67,6 +73,37 @@ export const useStore = defineStore('store', {
         },
         setCurrentTypeShow(type: CalendarState['currentTypeShow']): void {
             this.currentTypeShow = type;
+        },
+        openModalWindow(item: CalendarTypes.CalendarItem): void {
+            const {
+                day,
+                nowYear,
+                nowMount,
+            } = item;
+
+            this.calendarItemTime = {
+                day,
+                nowYear,
+                nowMount,
+                startTime: '',
+                stopTime: '',
+            };
+
+            this.stateModalWindow = true;
+        },
+        closeModalWindow(): void {
+            this.stateModalWindow = false;
+            this.calendarItemTime = null;
+        },
+        setCalendarItemStartTime(item: string): void {
+            if (this.calendarItemTime) {
+                this.calendarItemTime.startTime = item;
+            }
+        },
+        setCalendarItemStopTime(item: string): void {
+            if (this.calendarItemTime) {
+                this.calendarItemTime.stopTime = item;
+            }
         },
     },
 });
