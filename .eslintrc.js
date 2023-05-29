@@ -2,6 +2,7 @@ module.exports = {
     root: true,
     env: {
         node: true,
+        es2021: true,
     },
     extends: [
         'plugin:vue/vue3-essential',
@@ -36,5 +37,7 @@ module.exports = {
         'global-require': 0,
         'no-unused-vars': 'off',
         'no-param-reassign': 'off',
+        '@typescript-eslint/no-namespace': 'off',
+
     },
 };

@@ -12,13 +12,12 @@
     </div>
 </template>
 <script lang="ts" setup>
-import { weekDays } from '@/enums/metaDays';
-import { useStore } from '@/store/store';
 import { computed } from 'vue';
+import { MetaDays } from '@/enums/metaDays';
+import { useStore } from '@/store/store';
 
 const store = useStore();
 const getDaysForMount = computed(() => store.getDaysForMonth);
 
-const weekDaysArr = Object.entries(weekDays)
-    .map(([key, value]) => value);
+const weekDaysArr = Object.values(MetaDays.WeekDays);
 </script>

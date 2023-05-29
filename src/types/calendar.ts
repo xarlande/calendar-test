@@ -5,10 +5,6 @@ export namespace CalendarTypes {
     readonly nowYear: number,
     readonly nowMount: number
   }
-
-  export interface CalendarState {
-    currentSelectData: number;
-    currentTypeShow: 'month' | 'week' | 'day';
-    currentYear: number;
-  }
 }
+
+export default {};

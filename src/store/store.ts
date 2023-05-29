@@ -1,22 +1,27 @@
 import { defineStore } from 'pinia';
 import moment from 'moment';
 import { CalendarTypes } from '@/types/calendar';
-import CalendarItems = CalendarTypes.CalendarItems;
-import CalendarState = CalendarTypes.CalendarState;
+import { TypeShowCalendar } from '@/enums/typeShowCalendar';
+
+interface CalendarState {
+  currentSelectData: number;
+  currentTypeShow: TypeShowCalendar.TypeCalendar;
+  currentYear: number;
+}
 
 export const useStore = defineStore('store', {
     state: (): CalendarState => ({
         currentSelectData: 0,
-        currentTypeShow: 'month',
+        currentTypeShow: TypeShowCalendar.TypeCalendar.Month,
         currentYear: 0,
     }),
     getters: {
-        getMountForSelectData(state) {
+        getMountForSelectData(state): moment.Moment {
             return moment()
                 .subtract(-state.currentSelectData, state.currentTypeShow);
         },
-        getDaysForMonth(): Array<CalendarItems> {
-            const daysList: Array<CalendarItems> = [];
+        getDaysForMonth(): Array<CalendarTypes.CalendarItems> {
+            const daysList: Array<CalendarTypes.CalendarItems> = [];
             let id = 0;
             const daysCount: number = this.getMountForSelectData.daysInMonth();
             const nowYear: number = this.getMountForSelectData.year();

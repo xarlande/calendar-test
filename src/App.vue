@@ -18,43 +18,34 @@
                 {{ currentYear }}
             </div>
             <div class="flex gap-4">
-                <button :class="{'!bg-blue-900': currentTypeShow === 'month'}"
+                <button :class="{'!bg-blue-900': currentTypeShow === TypeShowCalendar.TypeCalendar.Month}"
                         class="global_button"
-                        @click="setCurrentTypeShow('month')">
+                        @click="setCurrentTypeShow(TypeShowCalendar.TypeCalendar.Month)">
                     Місяць
                 </button>
-                <button :class="{'!bg-blue-900': currentTypeShow === 'week'}"
+                <button :class="{'!bg-blue-900': currentTypeShow === TypeShowCalendar.TypeCalendar.Week}"
                         class="global_button"
-                        @click="setCurrentTypeShow('week')">
+                        @click="setCurrentTypeShow(TypeShowCalendar.TypeCalendar.Week)">
                     Тиждень
                 </button>
-                <button :class="{'!bg-blue-900': currentTypeShow === 'day'}"
+                <button :class="{'!bg-blue-900': currentTypeShow === TypeShowCalendar.TypeCalendar.Day}"
                         class="global_button"
-                        @click="setCurrentTypeShow('day')">
+                        @click="setCurrentTypeShow(TypeShowCalendar.TypeCalendar.Day)">
                     День
                 </button>
             </div>
         </div>
         <BodyCalendarForMount v-if="currentTypeShow === 'month'" />
-    <!--        <div>-->
-    <!--            index for first day mount: {{ getIndexForFirstDay }}-->
-    <!--        </div>-->
-    <!--        <div>-->
-    <!--            arr days for mount: {{ getDaysForMount }}-->
-    <!--        </div>-->
     </div>
 
 </template>
 <script lang="ts" setup>
-import { useStore } from '@/store/store';
 import { computed } from 'vue';
+import { useStore } from '@/store/store';
 import BodyCalendarForMount from '@/components/bodyCalendarForMount.vue';
-import { CalendarTypes } from '@/types/calendar';
-import CalendarState = CalendarTypes.CalendarState;
+import { TypeShowCalendar } from '@/enums/typeShowCalendar';
 
 const store = useStore();
-// const getDaysForMount = computed(() => store.getDaysForMonth);
-// const getIndexForFirstDay = computed(() => store.getIndexForFirstDay);
 const currentSelectData = computed(() => store.currentSelectData);
 const currentTypeShow = computed(() => store.currentTypeShow);
 const currentYear = computed(() => store.currentYear);
@@ -62,5 +53,5 @@ const currentYear = computed(() => store.currentYear);
 const incrementCurrentSelectData = () => store.incrementCurrentSelectData();
 const decrementCurrentSelectData = () => store.decrementCurrentSelectData();
 const resetCurrentSelectData = () => store.resetCurrentSelectData();
-const setCurrentTypeShow = (type: CalendarState['currentTypeShow']) => store.setCurrentTypeShow(type);
+const setCurrentTypeShow = (type: TypeShowCalendar.TypeCalendar) => store.setCurrentTypeShow(type);
 </script>
