@@ -8,7 +8,7 @@ interface CalendarState {
   currentTypeShow: TypeShowCalendar.TypeCalendar;
   stateModalWindow: boolean;
   calendarItemsTime: Array<CalendarTypes.CalendarTime>;
-  calendarItemTime: CalendarTypes.CalendarTime | null;
+  modalData: CalendarTypes.CalendarTime | null;
   currentModalDate: string | null;
 }
 
@@ -18,7 +18,7 @@ export const useStore = defineStore('store', {
         currentTypeShow: TypeShowCalendar.TypeCalendar.Month,
         stateModalWindow: false,
         calendarItemsTime: [],
-        calendarItemTime: null,
+        modalData: null,
         currentModalDate: null,
     }),
     getters: {
@@ -149,7 +149,7 @@ export const useStore = defineStore('store', {
                 nowMount,
             } = item;
 
-            this.calendarItemTime = {
+            this.modalData = {
                 day,
                 nowYear,
                 nowMount,
@@ -163,27 +163,27 @@ export const useStore = defineStore('store', {
         },
         closeModalWindow(): void {
             this.stateModalWindow = false;
-            this.calendarItemTime = null;
+            this.modalData = null;
         },
         setCalendarItemStartTime(item: CalendarTypes.CalendarTime['startTime']): void {
-            if (this.calendarItemTime) {
-                this.calendarItemTime.startTime = item;
+            if (this.modalData) {
+                this.modalData.startTime = item;
             }
         },
         setCalendarItemStopTime(item: CalendarTypes.CalendarTime['stopTime']): void {
-            if (this.calendarItemTime) {
-                this.calendarItemTime.stopTime = item;
+            if (this.modalData) {
+                this.modalData.stopTime = item;
             }
         },
         pushCalendarItems(): void {
-            if (this.calendarItemTime) {
+            if (this.modalData) {
                 if (this.currentModalDate) {
                     const [year, month, day] = this.currentModalDate.split('-');
-                    this.calendarItemTime.day = day;
-                    this.calendarItemTime.nowMount = month;
-                    this.calendarItemTime.nowYear = Number(year);
+                    this.modalData.day = day;
+                    this.modalData.nowMount = month;
+                    this.modalData.nowYear = Number(year);
                 }
-                this.calendarItemsTime.push(this.calendarItemTime);
+                this.calendarItemsTime.push(this.modalData);
                 const getNumber = (time: string) => +time.replace(/:/g, '');
                 this.calendarItemsTime.sort((a, b) => getNumber(a.startTime) - getNumber(b.startTime));
 

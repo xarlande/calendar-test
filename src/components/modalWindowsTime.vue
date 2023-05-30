@@ -44,14 +44,14 @@ const setStopTime = (item: {
 }) => store.setCalendarItemStopTime(item.target.value);
 
 const stateStartTime = computed(() => {
-    if (store.calendarItemTime) {
-        return store.calendarItemTime.startTime.length;
+    if (store.modalData) {
+        return store.modalData.startTime.length;
     }
     return null;
 });
 const stateStopTime = computed(() => {
-    if (store.calendarItemTime) {
-        return store.calendarItemTime.stopTime.length;
+    if (store.modalData) {
+        return store.modalData.stopTime.length;
     }
     return null;
 });
