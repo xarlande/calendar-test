@@ -59,5 +59,5 @@ const stateDate = computed({
     get: () => store.getCurrentModalDate,
     set: (value) => store.setCurrentModalDate(value),
 });
-const validStateTime = computed(() => stateStopTime.value !== 0 && stateStartTime.value !== 0);
+const validStateTime = computed(() => !!stateStopTime.value && !!stateStartTime.value);
 </script>
