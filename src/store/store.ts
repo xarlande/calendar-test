@@ -7,8 +7,9 @@ interface CalendarState {
   currentSelectData: number;
   currentTypeShow: TypeShowCalendar.TypeCalendar;
   currentYear: number;
+  currentMonth: number;
   stateModalWindow: boolean;
-  calendarItemsTime: Array<CalendarTypes.CalendarTime> | [];
+  calendarItemsTime: Array<CalendarTypes.CalendarTime>;
   calendarItemTime: CalendarTypes.CalendarTime | null;
 }
 
@@ -17,6 +18,7 @@ export const useStore = defineStore('store', {
         currentSelectData: 0,
         currentTypeShow: TypeShowCalendar.TypeCalendar.Month,
         currentYear: 0,
+        currentMonth: 0,
         stateModalWindow: false,
         calendarItemsTime: [],
         calendarItemTime: null,
@@ -42,23 +44,72 @@ export const useStore = defineStore('store', {
                 });
                 id += 1;
             }
-            this.currentYear = daysList[0].nowYear;
-            for (let indexDay = 1; indexDay < this.getIndexForFirstDay; indexDay += 1) {
-                daysList.unshift({
+
+            this.currentYear = nowYear;
+            this.currentMonth = nowMount;
+
+            return daysList;
+        },
+        getBeforeMonthForSelectData(state) {
+            return moment()
+                .subtract(-state.currentSelectData + 1, state.currentTypeShow);
+        },
+        getBeforeDaysForMonth(): Array<CalendarTypes.CalendarItem> {
+            const daysList: Array<CalendarTypes.CalendarItem> = [];
+            let id = 31;
+            const daysCount: number = this.getBeforeMonthForSelectData.daysInMonth();
+            const nowYear: number = this.getBeforeMonthForSelectData.year();
+            const nowMount: number = this.getBeforeMonthForSelectData.month();
+
+            for (let day = 1; day <= daysCount; day += 1) {
+                daysList.push({
                     id,
-                    day: 0,
+                    day,
                     nowYear,
                     nowMount,
                 });
                 id += 1;
             }
 
-            return daysList;
+            return this.getIndexForFirstDay === 1 || this.getIndexForFirstDay === 0 ? [] : daysList.slice(-this.getIndexForFirstDay + 1);
         },
         getIndexForFirstDay(): number {
             return this.getMountForSelectData.clone()
                 .startOf('month')
                 .weekday();
+        },
+        getAfterMonthForSelectData(state): moment.Moment {
+            return moment()
+                .subtract(-state.currentSelectData - 1, state.currentTypeShow);
+        },
+        getAfterDaysForMonth(): Array<CalendarTypes.CalendarItem> {
+            const daysList = [];
+            let id = 61;
+            const daysCount: number = this.getAfterMonthForSelectData.daysInMonth();
+            const nowYear: number = this.getAfterMonthForSelectData.year();
+            const nowMount: number = this.getAfterMonthForSelectData.month();
+
+            for (let day = 1; day <= daysCount; day += 1) {
+                daysList.push({
+                    id,
+                    day,
+                    nowYear,
+                    nowMount,
+                });
+                id += 1;
+            }
+
+            const monthLength: number = this.getBeforeDaysForMonth.length + this.getDaysForMonth.length;
+
+            if (monthLength > 42) {
+                daysList.length = 49 - monthLength;
+            } else if (monthLength > 35) {
+                daysList.length = 42 - monthLength;
+            } else if (monthLength > 28) {
+                daysList.length = 35 - monthLength;
+            }
+
+            return daysList;
         },
     },
     actions: {
@@ -103,6 +154,12 @@ export const useStore = defineStore('store', {
         setCalendarItemStopTime(item: string): void {
             if (this.calendarItemTime) {
                 this.calendarItemTime.stopTime = item;
+            }
+        },
+        pushCalendarItems(): void {
+            if (this.calendarItemTime) {
+                this.calendarItemsTime.push(this.calendarItemTime);
+                this.stateModalWindow = false;
             }
         },
     },

@@ -38,6 +38,7 @@ module.exports = {
         'no-unused-vars': 'off',
         'no-param-reassign': 'off',
         '@typescript-eslint/no-namespace': 'off',
+        'vuejs-accessibility/click-events-have-key-events': 'off',
 
     },
 };

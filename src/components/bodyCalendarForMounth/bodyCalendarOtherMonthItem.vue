@@ -1,7 +1,10 @@
 <template>
+    <!--    <div-->
+    <!--        class="border bg-gray-50 pb-10 bg-opacity-40 text-gray-400 pt-2">-->
+    <!--        {{ calendarData.day }}-->
+    <!--    </div>-->
     <div
-        v-if="calendarData.day !== 0"
-        class="border pb-10 pt-2 hover:bg-gray-100 cursor-pointer"
+        class="border bg-gray-50 pb-10 bg-opacity-40 text-gray-400 pt-2 cursor-pointer"
         @click="openModalWindow(calendarData)">
         <p class="mb-2">
             {{ calendarData.day }}
@@ -11,10 +14,11 @@
             {{ item.startTime }} - {{ item.stopTime }}
         </div>
     </div>
+
 </template>
 <script lang="ts" setup>
-import { computed, defineProps } from 'vue';
 import { CalendarTypes } from '@/types/calendar';
+import { computed, defineProps } from 'vue';
 import { useStore } from '@/store/store';
 
 const props = defineProps<{

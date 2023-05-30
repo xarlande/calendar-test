@@ -14,7 +14,10 @@
                                                             @input="setStopTime"></label>
                 </div>
                 <div class="flex justify-end">
-                    <button class="global_button">Готово</button>
+                    <button :class="{'!bg-blue-300': !validStateTime}"
+                            :disabled="!validStateTime" class="global_button"
+                            @click="store.pushCalendarItems()">Готово
+                    </button>
                 </div>
             </div>
         </div>
@@ -22,6 +25,7 @@
 </template>
 <script lang="ts" setup>
 import { useStore } from '@/store/store';
+import { computed } from 'vue';
 
 const store = useStore();
 
@@ -32,4 +36,18 @@ const setStartTime = (item: {
 const setStopTime = (item: {
   target: HTMLInputElement
 }) => store.setCalendarItemStopTime(item.target.value);
+
+const stateStartTime = computed(() => {
+    if (store.calendarItemTime) {
+        return store.calendarItemTime.startTime.length;
+    }
+    return false;
+});
+const stateStopTime = computed(() => {
+    if (store.calendarItemTime) {
+        return store.calendarItemTime.stopTime.length;
+    }
+    return false;
+});
+const validStateTime = computed(() => stateStopTime.value !== 0 && stateStartTime.value !== 0);
 </script>

@@ -14,7 +14,8 @@
             </button>
         </div>
         <div class="py-2">
-            {{ currentYear }}
+            <!--            Місяць: {{ currentMonth }} Рік: {{ currentYear }}-->
+            {{ getCurrentMonth }}
         </div>
         <div class="flex gap-4">
             <button :class="{'!bg-blue-900': currentTypeShow === TypeShowCalendar.TypeCalendar.Month}"
@@ -43,7 +44,7 @@ import { computed } from 'vue';
 const store = useStore();
 const currentSelectData = computed(() => store.currentSelectData);
 const currentTypeShow = computed(() => store.currentTypeShow);
-const currentYear = computed(() => store.currentYear);
+const getCurrentMonth = computed(() => store.getMountForSelectData.format('MMMM YYYY'));
 
 const incrementCurrentSelectData = () => store.incrementCurrentSelectData();
 const decrementCurrentSelectData = () => store.decrementCurrentSelectData();

@@ -11,18 +11,18 @@ export namespace MetaTime {
   }
 
   export enum YearMonths {
-    january = 'Січень',
-    february = 'Лютий',
-    march = 'Березень',
-    april = 'Квітень',
-    may = 'Травень',
-    june = 'Червень',
-    july = 'Липень',
-    august = 'Серпень',
-    september = 'Вересень',
-    october = 'Жовтень',
-    november = 'Листопад',
-    december = 'Грудень',
+    January = 'Січень',
+    February = 'Лютий',
+    March = 'Березень',
+    April = 'Квітень',
+    May = 'Травень',
+    June = 'Червень',
+    July = 'Липень',
+    August = 'Серпень',
+    September = 'Вересень',
+    October = 'Жовтень',
+    November = 'Листопад',
+    December = 'Грудень',
   }
 
   export enum Time {
