@@ -6,6 +6,12 @@
                 <div class="flex justify-end">
                     <button @click="closeModalWindow">x</button>
                 </div>
+                <div class="my-10 flex justify-center">
+                    <label for="changeDate">
+                        Date:
+                        <input id="changeDate" v-model="stateDate" type="date">
+                    </label>
+                </div>
                 <div class="flex justify-around my-5">
                     <label for="startTime">Start Time: <input id="startTime" type="time"
                                                               @input="setStartTime">
@@ -41,13 +47,17 @@ const stateStartTime = computed(() => {
     if (store.calendarItemTime) {
         return store.calendarItemTime.startTime.length;
     }
-    return false;
+    return null;
 });
 const stateStopTime = computed(() => {
     if (store.calendarItemTime) {
         return store.calendarItemTime.stopTime.length;
     }
-    return false;
+    return null;
+});
+const stateDate = computed({
+    get: () => store.getCurrentModalDate,
+    set: (value) => store.setCurrentModalDate(value),
 });
 const validStateTime = computed(() => stateStopTime.value !== 0 && stateStartTime.value !== 0);
 </script>

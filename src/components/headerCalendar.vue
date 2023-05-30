@@ -14,8 +14,7 @@
             </button>
         </div>
         <div class="py-2">
-            <!--            Місяць: {{ currentMonth }} Рік: {{ currentYear }}-->
-            {{ getCurrentMonth }}
+            {{ getCurrentMonth[1] }} / {{ getCurrentYear }}
         </div>
         <div class="flex gap-4">
             <button :class="{'!bg-blue-900': currentTypeShow === TypeShowCalendar.TypeCalendar.Month}"
@@ -40,11 +39,14 @@
 import { TypeShowCalendar } from '@/enums/typeShowCalendar';
 import { useStore } from '@/store/store';
 import { computed } from 'vue';
+import { MetaTime } from '@/enums/metaTime';
 
 const store = useStore();
 const currentSelectData = computed(() => store.currentSelectData);
 const currentTypeShow = computed(() => store.currentTypeShow);
-const getCurrentMonth = computed(() => store.getMountForSelectData.format('MMMM YYYY'));
+const getCurrentYear = computed(() => store.getCurrentYear);
+const getCurrentMonth = computed(() => Object.entries(MetaTime.YearMonths)
+    .find(([key]) => key === store.getCurrentMonth));
 
 const incrementCurrentSelectData = () => store.incrementCurrentSelectData();
 const decrementCurrentSelectData = () => store.decrementCurrentSelectData();

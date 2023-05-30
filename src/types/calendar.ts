@@ -1,8 +1,8 @@
 export namespace CalendarTypes {
   export interface CalendarItemNoId {
-    readonly day: number;
-    readonly nowYear: number;
-    readonly nowMount: number;
+    day: string;
+    nowYear: number;
+    nowMount: string;
   }
 
   export interface CalendarItem extends CalendarItemNoId {

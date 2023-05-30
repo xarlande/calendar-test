@@ -1,6 +1,5 @@
 <template>
     <div
-        v-if="calendarData.day !== 0"
         class="border pb-10 pt-2 hover:bg-gray-100 cursor-pointer"
         @click="openModalWindow(calendarData)">
         <p class="mb-2">
