@@ -20,42 +20,38 @@ export const useStore = defineStore('store', {
         modalData: null,
     }),
     getters: {
-        getCurrentTime(state): moment.Moment {
+        getSelectedTime(state): moment.Moment {
             return moment()
                 .subtract(-state.currentDay, 'day');
         },
-        getCurrentTimeFormat(): string {
-            return this.getCurrentTime.clone()
-                .format('YYYY-MM-DD');
-        },
-        getDaysInCurrentMonth(): number {
-            return this.getCurrentTime.clone()
+        getDaysInSelectedMonth(): number {
+            return this.getSelectedTime.clone()
                 .daysInMonth();
         },
         getIndexForFirstDay(): number {
-            return this.getCurrentTime.clone()
+            return this.getSelectedTime.clone()
                 .startOf('month')
                 .weekday();
         },
         getCurrentYear(): string | null {
-            if (this.getCurrentTime) {
-                return this.getCurrentTime.format('YYYY');
+            if (this.getSelectedTime) {
+                return this.getSelectedTime.format('YYYY');
             }
             return null;
         },
         getCurrentMonth(): string | null {
-            if (this.getCurrentTime) {
-                return this.getCurrentTime.format('MMMM');
+            if (this.getSelectedTime) {
+                return this.getSelectedTime.format('MMMM');
             }
             return null;
         },
         getDaysForMonth(): Array<CalendarTypes.CalendarTime> {
             const daysList: Array<CalendarTypes.CalendarTime> = [];
             let id = 0;
-            const daysInMonth: number = this.getCurrentTime.daysInMonth();
+            const daysInMonth: number = this.getSelectedTime.daysInMonth();
 
             for (let day = 1; day <= daysInMonth; day += 1) {
-                const currentDay = this.getCurrentTime.date(day);
+                const currentDay = this.getSelectedTime.date(day);
                 daysList.push({
                     id,
                     day: currentDay.format('YYYY-MM-DD'),
@@ -68,7 +64,7 @@ export const useStore = defineStore('store', {
         getBeforeDaysForMonth(): Array<CalendarTypes.CalendarTime> {
             const daysList: Array<CalendarTypes.CalendarTime> = [];
             let id = 31;
-            const beforeMonthDate: moment.Moment = this.getCurrentTime.clone()
+            const beforeMonthDate: moment.Moment = this.getSelectedTime.clone()
                 .subtract(1, 'month');
             const beforeDaysInMonth: number = beforeMonthDate.daysInMonth();
 
@@ -90,7 +86,7 @@ export const useStore = defineStore('store', {
         getAfterDaysForMonth(): Array<CalendarTypes.CalendarTime> {
             const daysList: Array<CalendarTypes.CalendarTime> = [];
             let id = 62;
-            const afterMonthDate: moment.Moment = this.getCurrentTime.clone()
+            const afterMonthDate: moment.Moment = this.getSelectedTime.clone()
                 .subtract(-1, 'month');
             const afterDaysInMonth: number = afterMonthDate.daysInMonth();
 
@@ -141,7 +137,7 @@ export const useStore = defineStore('store', {
         incrementCurrentSelectData(): void {
             let days: number;
             if (this.currentTypeShow === 'month') {
-                days = this.getCurrentTime.clone()
+                days = this.getSelectedTime.clone()
                     .subtract(-1, 'month')
                     .daysInMonth();
             } else if (this.currentTypeShow === 'week') {
@@ -154,7 +150,7 @@ export const useStore = defineStore('store', {
         decrementCurrentSelectData(): void {
             let days: number;
             if (this.currentTypeShow === 'month') {
-                days = this.getDaysInCurrentMonth;
+                days = this.getDaysInSelectedMonth;
             } else if (this.currentTypeShow === 'week') {
                 days = 7;
             } else {
@@ -180,13 +176,13 @@ export const useStore = defineStore('store', {
             this.modalData = null;
         },
         setModalDateStartTime(item: string | null): void {
-            if (this.modalData && !!item) {
+            if (this.modalData && item) {
                 this.modalData.startTime = moment(item, 'HH:mm')
                     .unix();
             }
         },
         setModalDateStopTime(item: string | null): void {
-            if (this.modalData && !!item) {
+            if (this.modalData && item) {
                 this.modalData.stopTime = moment(item, 'HH:mm')
                     .unix();
             }
