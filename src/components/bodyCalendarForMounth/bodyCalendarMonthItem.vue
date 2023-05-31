@@ -25,7 +25,7 @@
 import { computed, defineProps } from 'vue';
 import { CalendarTypes } from '@/types/calendar';
 import { useStore } from '@/store/store';
-import moment from 'moment/moment';
+import { convertTime } from '@/methods/convertTime';
 
 const props = defineProps<{
   calendarData: CalendarTypes.CalendarTime
@@ -38,8 +38,4 @@ const calendarDataDay = computed(() => {
     const [year, month, day] = props.calendarData.day.split('-');
     return day;
 });
-
-const convertTime = (timestamp: number) => moment.unix(timestamp)
-    .format('HH:mm');
-
 </script>
