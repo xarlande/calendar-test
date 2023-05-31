@@ -18,5 +18,5 @@ defineProps<{
 }>();
 
 const store = useStore();
-const openModalWindow = (calendarData: CalendarTypes.CalendarItem) => store.openModalWindow(calendarData);
+const openModalWindow = (calendarData: CalendarTypes.CalendarItem) => store.openModalWindow(calendarData.day);
 </script>

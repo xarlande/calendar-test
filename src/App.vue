@@ -5,7 +5,6 @@
         <BodyCalendarForWeek v-if="currentTypeShow === TypeShowCalendar.TypeCalendar.Week"/>
         <BodyCalendarForDay v-if="currentTypeShow === TypeShowCalendar.TypeCalendar.Day"/>
         <ModalWindowsTime v-if="stateModalWindow"/>
-
     </div>
 
 </template>
@@ -23,7 +22,4 @@ import ModalWindowsTime from '@/components/modalWindowsTime.vue';
 const store = useStore();
 const currentTypeShow = computed(() => store.currentTypeShow);
 const stateModalWindow = computed(() => store.isModalWindowOpened);
-// console.log(moment('10:00', 'HH:mm')
-//     .unix());
-// console.log(moment.unix(1685516400));
 </script>

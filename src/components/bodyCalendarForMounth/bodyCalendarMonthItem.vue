@@ -28,7 +28,7 @@ import { useStore } from '@/store/store';
 import moment from 'moment/moment';
 
 const props = defineProps<{
-  calendarData: CalendarTypes.CalendarItem
+  calendarData: CalendarTypes.CalendarTime
 }>();
 
 const store = useStore();

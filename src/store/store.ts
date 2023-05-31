@@ -37,20 +37,20 @@ export const useStore = defineStore('store', {
                 .startOf('month')
                 .weekday();
         },
-        getCurrentYear(): string | undefined {
+        getCurrentYear(): string | null {
             if (this.getCurrentTime) {
                 return this.getCurrentTime.format('YYYY');
             }
-            return undefined;
+            return null;
         },
-        getCurrentMonth(): string | undefined {
+        getCurrentMonth(): string | null {
             if (this.getCurrentTime) {
                 return this.getCurrentTime.format('MMMM');
             }
-            return undefined;
+            return null;
         },
-        getDaysForMonth(): Array<CalendarTypes.CalendarItem> {
-            const daysList: Array<CalendarTypes.CalendarItem> = [];
+        getDaysForMonth(): Array<CalendarTypes.CalendarTime> {
+            const daysList: Array<CalendarTypes.CalendarTime> = [];
             let id = 0;
             const daysInMonth: number = this.getCurrentTime.daysInMonth();
 
@@ -65,8 +65,8 @@ export const useStore = defineStore('store', {
             }
             return daysList;
         },
-        getBeforeDaysForMonth(): Array<CalendarTypes.CalendarItem> {
-            const daysList: Array<CalendarTypes.CalendarItem> = [];
+        getBeforeDaysForMonth(): Array<CalendarTypes.CalendarTime> {
+            const daysList: Array<CalendarTypes.CalendarTime> = [];
             let id = 31;
             const beforeMonthDate: moment.Moment = this.getCurrentTime.clone()
                 .subtract(1, 'month');
@@ -87,8 +87,8 @@ export const useStore = defineStore('store', {
             }
             return this.getIndexForFirstDay === 1 ? [] : daysList.slice(-this.getIndexForFirstDay + 1);
         },
-        getAfterDaysForMonth(): Array<CalendarTypes.CalendarItem> {
-            const daysList: Array<CalendarTypes.CalendarItem> = [];
+        getAfterDaysForMonth(): Array<CalendarTypes.CalendarTime> {
+            const daysList: Array<CalendarTypes.CalendarTime> = [];
             let id = 62;
             const afterMonthDate: moment.Moment = this.getCurrentTime.clone()
                 .subtract(-1, 'month');
@@ -116,25 +116,25 @@ export const useStore = defineStore('store', {
 
             return daysList;
         },
-        getModalDateDay(state): CalendarTypes.CalendarItem['day'] | undefined {
+        getModalDateDay(state): CalendarTypes.CalendarItem['day'] | null {
             if (state.modalData) {
                 return state.modalData.day;
             }
-            return undefined;
+            return null;
         },
-        getModalDateStartTime(state): string | undefined {
+        getModalDateStartTime(state): string | null {
             if (state.modalData && state.modalData.startTime) {
                 return moment.unix(state.modalData.startTime)
                     .format('HH:mm');
             }
-            return undefined;
+            return null;
         },
-        getModalDateStopTime(state): string | undefined {
+        getModalDateStopTime(state): string | null {
             if (state.modalData && state.modalData.stopTime) {
                 return moment.unix(state.modalData.stopTime)
                     .format('HH:mm');
             }
-            return undefined;
+            return null;
         },
     },
     actions: {
@@ -171,8 +171,6 @@ export const useStore = defineStore('store', {
         openModalWindow(day: CalendarTypes.CalendarItem['day']): void {
             this.modalData = {
                 day,
-                startTime: null,
-                stopTime: null,
             };
 
             this.isModalWindowOpened = true;
@@ -181,14 +179,14 @@ export const useStore = defineStore('store', {
             this.isModalWindowOpened = false;
             this.modalData = null;
         },
-        setModalDateStartTime(item: string | undefined): void {
-            if (this.modalData && item) {
+        setModalDateStartTime(item: string | null): void {
+            if (this.modalData && !!item) {
                 this.modalData.startTime = moment(item, 'HH:mm')
                     .unix();
             }
         },
-        setModalDateStopTime(item: string | undefined): void {
-            if (this.modalData && item) {
+        setModalDateStopTime(item: string | null): void {
+            if (this.modalData && !!item) {
                 this.modalData.stopTime = moment(item, 'HH:mm')
                     .unix();
             }
@@ -202,8 +200,8 @@ export const useStore = defineStore('store', {
                 this.isModalWindowOpened = false;
             }
         },
-        setModalDateDay(value: CalendarTypes.CalendarItem['day'] | undefined): void {
-            if (this.modalData && value) {
+        setModalDateDay(value: CalendarTypes.CalendarItem['day'] | null): void {
+            if (this.modalData && !!value) {
                 this.modalData.day = value;
             }
         },

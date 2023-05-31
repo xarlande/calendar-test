@@ -21,8 +21,8 @@
                     ></label>
                 </div>
                 <div class="flex justify-end">
-                    <button :class="{'!bg-blue-300': !validStateTime}"
-                            :disabled="!validStateTime" class="global_button"
+                    <button :class="{'!bg-blue-300': !validateStateTime}"
+                            :disabled="!validateStateTime" class="global_button"
                             @click="store.pushCalendarItems()">Готово
                     </button>
                 </div>
@@ -37,13 +37,7 @@ import { computed } from 'vue';
 const store = useStore();
 
 const closeModalWindow = () => store.closeModalWindow();
-// const setStartTime = (item: {
-//   target: HTMLInputElement
-// }) => store.setCalendarItemStartTime(item.target.value);
-// const setStopTime = (item: {
-//   target: HTMLInputElement
-// }) => store.setCalendarItemStopTime(item.target.value);
-//
+
 const stateStartTime = computed({
     get: () => store.getModalDateStartTime,
     set: (value) => store.setModalDateStartTime(value),
@@ -56,5 +50,5 @@ const stateDate = computed({
     get: () => store.getModalDateDay,
     set: (value) => store.setModalDateDay(value),
 });
-const validStateTime = computed(() => !!stateStopTime.value && !!stateStartTime.value && stateStartTime.value < stateStopTime.value);
+const validateStateTime = computed(() => !!stateStopTime.value && !!stateStartTime.value && stateStartTime.value < stateStopTime.value);
 </script>
