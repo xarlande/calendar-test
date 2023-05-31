@@ -13,15 +13,16 @@
                     </label>
                 </div>
                 <div class="flex justify-around my-5">
-                    <label for="startTime">Start Time: <input id="startTime" type="time"
-                                                              @input="setStartTime">
+                    <label for="startTime">Start Time: <input id="startTime" v-model="stateStartTime"
+                                                              type="time"
+                    >
                     </label>
-                    <label for="stopTime">Stop Time: <input id="stopTime" type="time"
-                                                            @input="setStopTime"></label>
+                    <label for="stopTime">Stop Time: <input id="stopTime" v-model="stateStopTime" type="time"
+                    ></label>
                 </div>
                 <div class="flex justify-end">
-                    <button :class="{'!bg-blue-300': !validStateTime}"
-                            :disabled="!validStateTime" class="global_button"
+                    <button :class="{'!bg-blue-300': !validateStateTime}"
+                            :disabled="!validateStateTime" class="global_button"
                             @click="store.pushCalendarItems()">Готово
                     </button>
                 </div>
@@ -36,28 +37,18 @@ import { computed } from 'vue';
 const store = useStore();
 
 const closeModalWindow = () => store.closeModalWindow();
-const setStartTime = (item: {
-  target: HTMLInputElement
-}) => store.setCalendarItemStartTime(item.target.value);
-const setStopTime = (item: {
-  target: HTMLInputElement
-}) => store.setCalendarItemStopTime(item.target.value);
 
-const stateStartTime = computed(() => {
-    if (store.calendarItemTime) {
-        return store.calendarItemTime.startTime.length;
-    }
-    return null;
+const stateStartTime = computed({
+    get: () => store.getModalDateStartTime,
+    set: (value) => store.setModalDateStartTime(value),
 });
-const stateStopTime = computed(() => {
-    if (store.calendarItemTime) {
-        return store.calendarItemTime.stopTime.length;
-    }
-    return null;
+const stateStopTime = computed({
+    get: () => store.getModalDateStopTime,
+    set: (value) => store.setModalDateStopTime(value),
 });
 const stateDate = computed({
-    get: () => store.getCurrentModalDate,
-    set: (value) => store.setCurrentModalDate(value),
+    get: () => store.getModalDateDay,
+    set: (value) => store.setModalDateDay(value),
 });
-const validStateTime = computed(() => stateStopTime.value !== 0 && stateStartTime.value !== 0);
+const validateStateTime = computed(() => !!stateStopTime.value && !!stateStartTime.value && stateStartTime.value < stateStopTime.value);
 </script>
