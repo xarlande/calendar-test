@@ -3,195 +3,209 @@ import moment from 'moment';
 import { CalendarTypes } from '@/types/calendar';
 import { TypeShowCalendar } from '@/enums/typeShowCalendar';
 
-interface CalendarState {
-  currentSelectData: number;
+interface State {
+  currentDay: number;
   currentTypeShow: TypeShowCalendar.TypeCalendar;
-  stateModalWindow: boolean;
-  calendarItemsTime: Array<CalendarTypes.CalendarTime>;
-  modalData: CalendarTypes.CalendarTime | null;
-  currentModalDate: string | null;
+  isModalWindowOpened: boolean;
+  calendarEvents: Array<CalendarTypes.CalendarItem>;
+  modalData: CalendarTypes.CalendarItem | null;
 }
 
 export const useStore = defineStore('store', {
-    state: (): CalendarState => ({
-        currentSelectData: 0,
+    state: (): State => ({
+        currentDay: 0,
         currentTypeShow: TypeShowCalendar.TypeCalendar.Month,
-        stateModalWindow: false,
-        calendarItemsTime: [],
+        isModalWindowOpened: false,
+        calendarEvents: [],
         modalData: null,
-        currentModalDate: null,
     }),
     getters: {
-        getMountForSelectData(state): moment.Moment {
+        getCurrentTime(state): moment.Moment {
             return moment()
-                .subtract(-state.currentSelectData, state.currentTypeShow);
+                .subtract(-state.currentDay, 'day');
+        },
+        getCurrentTimeFormat(): string {
+            return this.getCurrentTime.clone()
+                .format('YYYY-MM-DD');
+        },
+        getDaysInCurrentMonth(): number {
+            return this.getCurrentTime.clone()
+                .daysInMonth();
+        },
+        getIndexForFirstDay(): number {
+            return this.getCurrentTime.clone()
+                .startOf('month')
+                .weekday();
         },
         getCurrentYear(): string | undefined {
-            if (this.getMountForSelectData) {
-                const [month, year] = this.getMountForSelectData.format('MMMM YYYY')
-                    .split(' ');
-                return year;
+            if (this.getCurrentTime) {
+                return this.getCurrentTime.format('YYYY');
             }
             return undefined;
         },
         getCurrentMonth(): string | undefined {
-            if (this.getMountForSelectData) {
-                const [month] = this.getMountForSelectData.format('MMMM YYYY')
-                    .split(' ');
-                return month;
+            if (this.getCurrentTime) {
+                return this.getCurrentTime.format('MMMM');
             }
             return undefined;
         },
         getDaysForMonth(): Array<CalendarTypes.CalendarItem> {
             const daysList: Array<CalendarTypes.CalendarItem> = [];
             let id = 0;
-            const daysCount: number = this.getMountForSelectData.daysInMonth();
-            const nowYear: number = this.getMountForSelectData.year();
-            const nowMount: string = this.getMountForSelectData.format('MM');
+            const daysInMonth: number = this.getCurrentTime.daysInMonth();
 
-            for (let day = 1; day <= daysCount; day += 1) {
-                const copyDay = day < 10 ? `0${day}` : `${day}`;
+            for (let day = 1; day <= daysInMonth; day += 1) {
+                const currentDay = this.getCurrentTime.date(day);
                 daysList.push({
                     id,
-                    day: copyDay,
-                    nowYear,
-                    nowMount,
+                    day: currentDay.format('YYYY-MM-DD'),
+                    currentMonth: true,
                 });
                 id += 1;
             }
-
             return daysList;
-        },
-        getBeforeMonthForSelectData(state) {
-            return moment()
-                .subtract(-state.currentSelectData + 1, state.currentTypeShow);
         },
         getBeforeDaysForMonth(): Array<CalendarTypes.CalendarItem> {
             const daysList: Array<CalendarTypes.CalendarItem> = [];
             let id = 31;
-            const daysCount: number = this.getBeforeMonthForSelectData.daysInMonth();
-            const nowYear: number = this.getBeforeMonthForSelectData.year();
-            const nowMount: string = this.getBeforeMonthForSelectData.format('MM');
+            const beforeMonthDate: moment.Moment = this.getCurrentTime.clone()
+                .subtract(1, 'month');
+            const beforeDaysInMonth: number = beforeMonthDate.daysInMonth();
 
-            for (let day = 1; day <= daysCount; day += 1) {
-                const copyDay = day < 10 ? `0${day}` : `${day}`;
+            for (let day = 1; day <= beforeDaysInMonth; day += 1) {
+                const currentDay = beforeMonthDate.date(day);
                 daysList.push({
                     id,
-                    day: copyDay,
-                    nowYear,
-                    nowMount,
+                    day: currentDay.format('YYYY-MM-DD'),
+                    currentMonth: false,
                 });
                 id += 1;
             }
 
-            return this.getIndexForFirstDay === 1 || this.getIndexForFirstDay === 0 ? [] : daysList.slice(-this.getIndexForFirstDay + 1);
-        },
-        getIndexForFirstDay(): number {
-            return this.getMountForSelectData.clone()
-                .startOf('month')
-                .weekday();
-        },
-        getAfterMonthForSelectData(state: CalendarState): moment.Moment {
-            return moment()
-                .subtract(-state.currentSelectData - 1, state.currentTypeShow);
+            if (this.getIndexForFirstDay === 0) {
+                return daysList.slice(-6);
+            }
+            return this.getIndexForFirstDay === 1 ? [] : daysList.slice(-this.getIndexForFirstDay + 1);
         },
         getAfterDaysForMonth(): Array<CalendarTypes.CalendarItem> {
             const daysList: Array<CalendarTypes.CalendarItem> = [];
-            let id = 61;
-            const daysCount: number = this.getAfterMonthForSelectData.daysInMonth();
-            const nowYear: number = this.getAfterMonthForSelectData.year();
-            const nowMount: CalendarTypes.CalendarItem['nowMount'] = this.getAfterMonthForSelectData.format('MM');
+            let id = 62;
+            const afterMonthDate: moment.Moment = this.getCurrentTime.clone()
+                .subtract(-1, 'month');
+            const afterDaysInMonth: number = afterMonthDate.daysInMonth();
 
-            for (let day = 1; day <= daysCount; day += 1) {
-                const copyDay: string = day < 10 ? `0${day}` : `${day}`;
+            for (let day = 1; day <= afterDaysInMonth; day += 1) {
+                const currentDay = afterMonthDate.date(day);
                 daysList.push({
                     id,
-                    day: copyDay,
-                    nowYear,
-                    nowMount,
+                    day: currentDay.format('YYYY-MM-DD'),
+                    currentMonth: false,
                 });
                 id += 1;
             }
 
             const monthLength: number = this.getBeforeDaysForMonth.length + this.getDaysForMonth.length;
 
-            if (monthLength > 42) {
-                daysList.length = 49 - monthLength;
-            } else if (monthLength > 35) {
+            if (monthLength > 35) {
                 daysList.length = 42 - monthLength;
             } else if (monthLength > 28) {
                 daysList.length = 35 - monthLength;
+            } else if (monthLength === 28) {
+                daysList.length = 28 - monthLength;
             }
 
             return daysList;
         },
-        getCurrentModalDate(state): CalendarState['currentModalDate'] {
-            return state.currentModalDate;
+        getModalDateDay(state): CalendarTypes.CalendarItem['day'] | undefined {
+            if (state.modalData) {
+                return state.modalData.day;
+            }
+            return undefined;
+        },
+        getModalDateStartTime(state): string | undefined {
+            if (state.modalData && state.modalData.startTime) {
+                return moment.unix(state.modalData.startTime)
+                    .format('HH:mm');
+            }
+            return undefined;
+        },
+        getModalDateStopTime(state): string | undefined {
+            if (state.modalData && state.modalData.stopTime) {
+                return moment.unix(state.modalData.stopTime)
+                    .format('HH:mm');
+            }
+            return undefined;
         },
     },
     actions: {
         incrementCurrentSelectData(): void {
-            this.currentSelectData += 1;
+            let days: number;
+            if (this.currentTypeShow === 'month') {
+                days = this.getCurrentTime.clone()
+                    .subtract(-1, 'month')
+                    .daysInMonth();
+            } else if (this.currentTypeShow === 'week') {
+                days = 7;
+            } else {
+                days = 1;
+            }
+            this.currentDay += days;
         },
         decrementCurrentSelectData(): void {
-            this.currentSelectData -= 1;
+            let days: number;
+            if (this.currentTypeShow === 'month') {
+                days = this.getDaysInCurrentMonth;
+            } else if (this.currentTypeShow === 'week') {
+                days = 7;
+            } else {
+                days = 1;
+            }
+            this.currentDay -= days;
         },
         resetCurrentSelectData(): void {
-            this.currentSelectData = 0;
+            this.currentDay = 0;
         },
-        setCurrentTypeShow(type: CalendarState['currentTypeShow']): void {
+        setCurrentTypeShow(type: State['currentTypeShow']): void {
             this.currentTypeShow = type;
         },
-        openModalWindow(item: CalendarTypes.CalendarItem): void {
-            const {
-                day,
-                nowYear,
-                nowMount,
-            } = item;
-
+        openModalWindow(day: CalendarTypes.CalendarItem['day']): void {
             this.modalData = {
                 day,
-                nowYear,
-                nowMount,
-                startTime: '',
-                stopTime: '',
+                startTime: null,
+                stopTime: null,
             };
 
-            this.currentModalDate = `${nowYear}-${nowMount}-${day}`;
-
-            this.stateModalWindow = true;
+            this.isModalWindowOpened = true;
         },
         closeModalWindow(): void {
-            this.stateModalWindow = false;
+            this.isModalWindowOpened = false;
             this.modalData = null;
         },
-        setCalendarItemStartTime(item: CalendarTypes.CalendarTime['startTime']): void {
-            if (this.modalData) {
-                this.modalData.startTime = item;
+        setModalDateStartTime(item: string | undefined): void {
+            if (this.modalData && item) {
+                this.modalData.startTime = moment(item, 'HH:mm')
+                    .unix();
             }
         },
-        setCalendarItemStopTime(item: CalendarTypes.CalendarTime['stopTime']): void {
-            if (this.modalData) {
-                this.modalData.stopTime = item;
+        setModalDateStopTime(item: string | undefined): void {
+            if (this.modalData && item) {
+                this.modalData.stopTime = moment(item, 'HH:mm')
+                    .unix();
             }
         },
         pushCalendarItems(): void {
             if (this.modalData) {
-                if (this.currentModalDate) {
-                    const [year, month, day] = this.currentModalDate.split('-');
-                    this.modalData.day = day;
-                    this.modalData.nowMount = month;
-                    this.modalData.nowYear = Number(year);
-                }
-                this.calendarItemsTime.push(this.modalData);
-                const getNumber = (time: string) => +time.replace(/:/g, '');
-                this.calendarItemsTime.sort((a, b) => getNumber(a.startTime) - getNumber(b.startTime));
+                this.calendarEvents.push(this.modalData);
 
-                this.stateModalWindow = false;
+                this.calendarEvents.sort((a, b) => (a.startTime && b.startTime ? a.startTime - b.startTime : 1 - 1));
+
+                this.isModalWindowOpened = false;
             }
         },
-        setCurrentModalDate(value: CalendarState['currentModalDate']): void {
-            this.currentModalDate = value;
+        setModalDateDay(value: CalendarTypes.CalendarItem['day'] | undefined): void {
+            if (this.modalData && value) {
+                this.modalData.day = value;
+            }
         },
     },
 });

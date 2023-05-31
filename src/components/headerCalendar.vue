@@ -42,7 +42,7 @@ import { computed } from 'vue';
 import { MetaTime } from '@/enums/metaTime';
 
 const store = useStore();
-const currentSelectData = computed(() => store.currentSelectData);
+const currentSelectData = computed(() => store.currentDay);
 const currentTypeShow = computed(() => store.currentTypeShow);
 const getCurrentYear = computed(() => store.getCurrentYear);
 const getCurrentMonth = computed(() => Object.entries(MetaTime.YearMonths)

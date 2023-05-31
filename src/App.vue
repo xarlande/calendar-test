@@ -5,20 +5,25 @@
         <BodyCalendarForWeek v-if="currentTypeShow === TypeShowCalendar.TypeCalendar.Week"/>
         <BodyCalendarForDay v-if="currentTypeShow === TypeShowCalendar.TypeCalendar.Day"/>
         <ModalWindowsTime v-if="stateModalWindow"/>
+
     </div>
 
 </template>
+
 <script lang="ts" setup>
-import BodyCalendarForMonth from '@/components/bodyCalendarForMonth.vue';
-import { TypeShowCalendar } from '@/enums/typeShowCalendar';
-import BodyCalendarForDay from '@/components/bodyCalendarForDay.vue';
-import BodyCalendarForWeek from '@/components/bodyCalendarForWeek.vue';
 import { useStore } from '@/store/store';
 import { computed } from 'vue';
+import { TypeShowCalendar } from '@/enums/typeShowCalendar';
+import BodyCalendarForMonth from '@/components/bodyCalendarForMonth.vue';
 import HeaderCalendar from '@/components/headerCalendar.vue';
+import BodyCalendarForDay from '@/components/bodyCalendarForDay.vue';
+import BodyCalendarForWeek from '@/components/bodyCalendarForWeek.vue';
 import ModalWindowsTime from '@/components/modalWindowsTime.vue';
 
 const store = useStore();
 const currentTypeShow = computed(() => store.currentTypeShow);
-const stateModalWindow = computed(() => store.stateModalWindow);
+const stateModalWindow = computed(() => store.isModalWindowOpened);
+// console.log(moment('10:00', 'HH:mm')
+//     .unix());
+// console.log(moment.unix(1685516400));
 </script>
