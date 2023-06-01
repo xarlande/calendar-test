@@ -15,7 +15,8 @@
 import { computed } from 'vue';
 import { MetaTime } from '@/enums/metaTime';
 import { useStore } from '@/store/store';
-import BodyCalendarMonthItem from '@/components/bodyCalendarForMounth/bodyCalendarMonthItem.vue';
+import BodyCalendarMonthItem
+    from '@/components/body/bodyCalendarForMounth/bodyCalendarMonthItem.vue';
 
 const store = useStore();
 const getDaysForMount = computed(() => {

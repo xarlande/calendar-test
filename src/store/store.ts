@@ -14,7 +14,7 @@ interface State {
 export const useStore = defineStore('store', {
     state: (): State => ({
         currentDay: 0,
-        currentTypeShow: TypeShowCalendar.TypeCalendar.Month,
+        currentTypeShow: TypeShowCalendar.TypeCalendar.Week,
         isModalWindowOpened: false,
         calendarEvents: [],
         modalData: null,
@@ -23,6 +23,9 @@ export const useStore = defineStore('store', {
         getSelectedTime(state): moment.Moment {
             return moment()
                 .subtract(-state.currentDay, 'day');
+        },
+        getSelectedTimeFormat(): string {
+            return this.getSelectedTime.format('YYYY-MM-DD');
         },
         getDaysInSelectedMonth(): number {
             return this.getSelectedTime.clone()
@@ -131,6 +134,40 @@ export const useStore = defineStore('store', {
                     .format('HH:mm');
             }
             return null;
+        },
+        getDaysForWeek(): Array<CalendarTypes.CalendarItem> {
+            const weekDays = [];
+            const startOfWeek = this.getSelectedTime.startOf('week');
+            let id = 0;
+
+            for (let i = 0; i < 7; i += 1) {
+                const currentDay = startOfWeek.clone()
+                    .add(i, 'days')
+                    .format('YYYY-MM-DD');
+                weekDays.push({
+                    id,
+                    day: currentDay,
+                });
+                id += 1;
+            }
+
+            return weekDays;
+        },
+        getAllHours(): Array<{ id: number, time: string }> {
+            const allHours = [];
+            let id = 0;
+
+            for (let i = 0; i < 24; i += 1) {
+                const currentHour = moment('00:00', 'HH:mm')
+                    .clone()
+                    .add(i, 'hours');
+                allHours.push({
+                    id,
+                    time: currentHour.format('HH:mm'),
+                });
+                id += 1;
+            }
+            return allHours;
         },
     },
     actions: {

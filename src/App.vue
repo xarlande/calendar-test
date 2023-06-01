@@ -13,11 +13,11 @@
 import { useStore } from '@/store/store';
 import { computed } from 'vue';
 import { TypeShowCalendar } from '@/enums/typeShowCalendar';
-import BodyCalendarForMonth from '@/components/bodyCalendarForMonth.vue';
-import HeaderCalendar from '@/components/headerCalendar.vue';
-import BodyCalendarForDay from '@/components/bodyCalendarForDay.vue';
-import BodyCalendarForWeek from '@/components/bodyCalendarForWeek.vue';
-import ModalWindowsTime from '@/components/modalWindowsTime.vue';
+import BodyCalendarForMonth from '@/components/body/bodyCalendarForMonth.vue';
+import HeaderCalendar from '@/components/header/headerCalendar.vue';
+import BodyCalendarForDay from '@/components/body/bodyCalendarForDay.vue';
+import BodyCalendarForWeek from '@/components/body/bodyCalendarForWeek.vue';
+import ModalWindowsTime from '@/components/modal/modalWindowsTime.vue';
 
 const store = useStore();
 const currentTypeShow = computed(() => store.currentTypeShow);
