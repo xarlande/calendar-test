@@ -14,9 +14,9 @@ import { defineProps } from 'vue';
 import { useStore } from '@/store/store';
 
 defineProps<{
-  calendarData: CalendarTypes.CalendarItem
+  calendarData: CalendarTypes.CalendarTime
 }>();
 
 const store = useStore();
-const openModalWindow = (calendarData: CalendarTypes.CalendarItem) => store.openModalWindow(calendarData.day);
+const openModalWindow = (calendarData: CalendarTypes.CalendarTime) => store.openModalWindow(calendarData.day);
 </script>

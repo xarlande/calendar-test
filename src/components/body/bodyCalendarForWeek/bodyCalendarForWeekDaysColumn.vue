@@ -3,7 +3,7 @@
         <div class="border-b">
             Всі дні
         </div>
-        <div v-for="item in getAllHours" :key="item.id" class="border-b">
+        <div v-for="item in getAllHours" :key="item.id" class="border-b py-2">
             {{ item.time }}
         </div>
     </div>

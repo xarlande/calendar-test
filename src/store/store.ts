@@ -7,8 +7,8 @@ interface State {
   currentDay: number;
   currentTypeShow: TypeShowCalendar.TypeCalendar;
   isModalWindowOpened: boolean;
-  calendarEvents: Array<CalendarTypes.CalendarItem>;
-  modalData: CalendarTypes.CalendarItem | null;
+  calendarEvents: Array<CalendarTypes.CalendarTime>;
+  modalData: CalendarTypes.CalendarTime | null;
 }
 
 export const useStore = defineStore('store', {
@@ -115,7 +115,7 @@ export const useStore = defineStore('store', {
 
             return daysList;
         },
-        getModalDateDay(state): CalendarTypes.CalendarItem['day'] | null {
+        getModalDateDay(state): CalendarTypes.CalendarTime['day'] | null {
             if (state.modalData) {
                 return state.modalData.day;
             }
@@ -135,7 +135,7 @@ export const useStore = defineStore('store', {
             }
             return null;
         },
-        getDaysForWeek(): Array<CalendarTypes.CalendarItem> {
+        getDaysForWeek(): Array<CalendarTypes.CalendarTime> {
             const weekDays = [];
             const startOfWeek = this.getSelectedTime.startOf('week');
             let id = 0;
@@ -201,10 +201,18 @@ export const useStore = defineStore('store', {
         setCurrentTypeShow(type: State['currentTypeShow']): void {
             this.currentTypeShow = type;
         },
-        openModalWindow(day: CalendarTypes.CalendarItem['day']): void {
-            this.modalData = {
-                day,
-            };
+        openModalWindow(day: CalendarTypes.CalendarTime['day'], startTime?: CalendarTypes.CalendarTime['startTime'], stopTime?: CalendarTypes.CalendarTime['stopTime']): void {
+            if (startTime && stopTime) {
+                this.modalData = {
+                    day,
+                    stopTime,
+                    startTime,
+                };
+            } else {
+                this.modalData = {
+                    day,
+                };
+            }
 
             this.isModalWindowOpened = true;
         },
@@ -233,7 +241,7 @@ export const useStore = defineStore('store', {
                 this.isModalWindowOpened = false;
             }
         },
-        setModalDateDay(value: CalendarTypes.CalendarItem['day'] | null): void {
+        setModalDateDay(value: CalendarTypes.CalendarTime['day'] | null): void {
             if (this.modalData && !!value) {
                 this.modalData.day = value;
             }

@@ -3,49 +3,42 @@
         <div class="border-b">
       &nbsp;
         </div>
-        <div class="border flex-auto relative">
-            <div :style="{top: positionTopTime+ '%', bottom: positionBottomTime+ '%'}"
-                 class="absolute bg-blue-500 text-white flex items-center justify-center inset-x-0">
-                <p>123</p>
+        <div class="border border-y-0 flex-auto relative flex flex-col">
+            <BodyCalendarForWeekTimeEvent v-for="(item, idx) in currentEvents"
+                                          :key="item.id" :idx-father-arr="idx"
+                                          :length-father-arr="currentEvents.length"
+                                          :time-event="item"/>
+            <div v-for="item in getAllHours" :key="item.id" class="border-b py-2"
+                 @click="openModal(item.time)">
+        &nbsp;
             </div>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-
-import { computed } from 'vue';
+import { computed, defineProps } from 'vue';
+import { CalendarTypes } from '@/types/calendar';
+import { useStore } from '@/store/store';
+import BodyCalendarForWeekTimeEvent
+    from '@/components/body/bodyCalendarForWeek/bodyCalendarForWeekItemList/bodyCalendarForWeekItem/bodyCalendarForWeekTimeEvent.vue';
 import moment from 'moment';
 
-// const calendarItem: Ref<HTMLDivElement | null> = ref(null);
-//
-// const height: ComputedRef<number | null> = computed(() => {
-//     if (calendarItem.value) {
-//         return calendarItem.value.clientHeight;
-//     }
-//     return null;
-// });
+const props = defineProps<{
+  getAllHours: Array<{ id: number, time: string }>
+  getCurrentDay: CalendarTypes.CalendarTime
+}>();
 
-const startTime = computed(() => moment('00:30', 'HH:mm')
-    .unix());
-const stopTime = computed(() => moment('05:30', 'HH:mm')
-    .unix());
-const startTimeStamp = computed(() => moment('00:00', 'HH:mm')
-    .unix());
-const stopTimeStamp = computed(() => moment('23:59', 'HH:mm')
-    .unix());
-const differenceTimeStamp = computed(() => stopTimeStamp.value - startTimeStamp.value);
-const positionTopTime = computed(() => {
-    const difference = startTime.value - startTimeStamp.value;
-    const totalDifference = differenceTimeStamp.value;
-    const request = (difference / totalDifference) * 100;
-    return Math.round(request);
-});
-const positionBottomTime = computed(() => {
-    const difference = stopTimeStamp.value - stopTime.value;
-    const totalDifference = differenceTimeStamp.value;
-    const request = (difference / totalDifference) * 100;
-    return Math.round(request);
-});
+const store = useStore();
+const currentEvents = computed(() => store.calendarEvents.filter((item) => item.day === props.getCurrentDay.day));
+const openModal = (time: string) => {
+    const startTime = moment(time, 'HH:mm')
+        .unix();
+    const stopTime = moment(time, 'HH:mm')
+        .add(1, 'hour')
+        .unix();
+
+    store.openModalWindow(props.getCurrentDay.day, startTime, stopTime);
+};
 
 </script>

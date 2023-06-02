@@ -3,13 +3,9 @@
         <BodyCalendarForWeekNameDays/>
         <div class="flex">
             <BodyCalendarForWeekDaysColumn :get-all-hours="getAllHours"/>
-            <BodyCalendarForWeekItem/>
-            <BodyCalendarForWeekItem/>
-            <BodyCalendarForWeekItem/>
-            <BodyCalendarForWeekItem/>
-            <BodyCalendarForWeekItem/>
-            <BodyCalendarForWeekItem/>
-            <BodyCalendarForWeekItem/>
+            <BodyCalendarForWeekItem v-for="item in getDaysForWeek" :key="item.id"
+                                     :get-all-hours="getAllHours"
+                                     :get-current-day="item"/>
         </div>
     </div>
 </template>
@@ -26,4 +22,5 @@ import BodyCalendarForWeekItem
 
 const store = useStore();
 const getAllHours = computed(() => store.getAllHours);
+const getDaysForWeek = computed(() => store.getDaysForWeek);
 </script>

@@ -1,13 +1,10 @@
 export namespace CalendarTypes {
-  export interface CalendarItem {
+  export interface CalendarTime {
+    id?: number;
+    currentMonth?: boolean;
     day: string;
     startTime?: number;
     stopTime?: number;
-  }
-
-  export interface CalendarTime extends CalendarItem {
-    id: number;
-    currentMonth: boolean;
   }
 }
 
