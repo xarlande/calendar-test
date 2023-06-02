@@ -39,6 +39,6 @@ module.exports = {
         'no-param-reassign': 'off',
         '@typescript-eslint/no-namespace': 'off',
         'vuejs-accessibility/click-events-have-key-events': 'off',
-
+        'no-mixed-operators': 'off',
     },
 };

@@ -3,12 +3,12 @@
         <div class="border-b">
       &nbsp;
         </div>
-        <div class="border border-y-0 flex-auto relative flex flex-col">
+        <div class="flex-auto relative flex flex-col">
             <BodyCalendarForWeekTimeEvent v-for="(item, idx) in currentEvents"
                                           :key="item.id" :idx-father-arr="idx"
                                           :length-father-arr="currentEvents.length"
                                           :time-event="item"/>
-            <div v-for="item in getAllHours" :key="item.id" class="border-b py-2"
+            <div v-for="item in getAllHours" :key="item.id" class="border-b py-2 cursor-pointer"
                  @click="openModal(item.time)">
         &nbsp;
             </div>
@@ -40,5 +40,15 @@ const openModal = (time: string) => {
 
     store.openModalWindow(props.getCurrentDay.day, startTime, stopTime);
 };
-
+// const areEventsIntersecting = (event1: CalendarTypes.CalendarTime, event2: CalendarTypes.CalendarTime): boolean | null => {
+//     if (event1.startTime && event1.stopTime && event2.startTime && event2.stopTime) {
+//         const start1 = moment.unix(event1.startTime);
+//         const end1 = moment.unix(event1.stopTime);
+//         const start2 = moment.unix(event2.startTime);
+//         const end2 = moment.unix(event2.stopTime);
+//
+//         return start1.isBefore(end2) && start2.isBefore(end1);
+//     }
+//     return null;
+// };
 </script>

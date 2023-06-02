@@ -3,7 +3,8 @@
         <div class="border-b">
             Всі дні
         </div>
-        <div v-for="item in getAllHours" :key="item.id" class="border-b py-2">
+        <div v-for="item in getAllHours" :key="item.id" :class="{'text-gray-400': item.currentTime}"
+             class="border-b py-2">
             {{ item.time }}
         </div>
     </div>
@@ -13,6 +14,6 @@
 import { defineProps } from 'vue';
 
 defineProps<{
-  getAllHours: Array<{ id: number, time: string }>
+  getAllHours: Array<{ id: number, time: string, currentTime: boolean }>
 }>();
 </script>

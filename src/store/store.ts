@@ -11,12 +11,40 @@ interface State {
   modalData: CalendarTypes.CalendarTime | null;
 }
 
+// const areEventsIntersecting = (event1: CalendarTypes.CalendarTime, event2: CalendarTypes.CalendarTime): boolean | null => {
+//     if (event1.startTime && event1.stopTime && event2.startTime && event2.stopTime) {
+//         const start1 = moment.unix(event1.startTime);
+//         const end1 = moment.unix(event1.stopTime);
+//         const start2 = moment.unix(event2.startTime);
+//         const end2 = moment.unix(event2.stopTime);
+//
+//         return start1.isBefore(end2) && start2.isBefore(end1);
+//     }
+//     return null;
+// };
+
 export const useStore = defineStore('store', {
     state: (): State => ({
         currentDay: 0,
         currentTypeShow: TypeShowCalendar.TypeCalendar.Week,
         isModalWindowOpened: false,
-        calendarEvents: [],
+        calendarEvents: [{
+            day: '2023-05-31',
+            stopTime: 1685674800,
+            startTime: 1685671200,
+        }, {
+            day: '2023-05-31',
+            stopTime: 1685678400,
+            startTime: 1685671200,
+        }, {
+            day: '2023-05-31',
+            stopTime: 1685682000,
+            startTime: 1685678400,
+        }, {
+            day: '2023-05-31',
+            stopTime: 1685685600,
+            startTime: 1685682000,
+        }],
         modalData: null,
     }),
     getters: {
@@ -153,22 +181,49 @@ export const useStore = defineStore('store', {
 
             return weekDays;
         },
-        getAllHours(): Array<{ id: number, time: string }> {
+        getSelectedDay(): CalendarTypes.CalendarTime {
+            const currentDay = this.getSelectedTime.format('YYYY-MM-DD');
+            return {
+                day: currentDay,
+            };
+        },
+        getAllHours(): Array<{ id: number; time: string; currentTime: boolean }> {
             const allHours = [];
             let id = 0;
 
+            const currentHour = moment(); // Отримуємо поточний час Moment.js
+
             for (let i = 0; i < 24; i += 1) {
-                const currentHour = moment('00:00', 'HH:mm')
+                const hour = moment('00:00', 'HH:mm')
                     .clone()
                     .add(i, 'hours');
+                const isCurrentHour = hour.isSame(currentHour, 'hour'); // Перевіряємо, чи є година поточною
+
                 allHours.push({
                     id,
-                    time: currentHour.format('HH:mm'),
+                    time: hour.format('HH:mm'),
+                    currentTime: isCurrentHour,
                 });
                 id += 1;
             }
+
             return allHours;
         },
+
+    // findIntersectingEvents(state): Array<CalendarTypes.CalendarTime> {
+    //     const intersectingEvents = [];
+    //
+    //     for (let i = 0; i < state.calendarEvents.length; i += 1) {
+    //         for (let j = 1; j < state.calendarEvents.length; i += 1) {
+    //             if (areEventsIntersecting(this.calendarEvents[i], this.calendarEvents[j]) === true) {
+    //                 intersectingEvents.push({
+    //                     ...this.calendarEvents[i],
+    //                 });
+    //             }
+    //         }
+    //     }
+    //     return intersectingEvents;
+    // },
     },
     actions: {
         incrementCurrentSelectData(): void {
@@ -248,5 +303,4 @@ export const useStore = defineStore('store', {
         },
     },
 });
-
 export default {};

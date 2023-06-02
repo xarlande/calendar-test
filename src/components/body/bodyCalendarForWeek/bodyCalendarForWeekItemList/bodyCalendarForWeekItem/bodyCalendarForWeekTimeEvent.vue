@@ -1,6 +1,6 @@
 <template>
     <div
-        :style="{top: positionTopTime+ '%', bottom: positionBottomTime+ '%', left: `calc(${(100-50)/(lengthFatherArr-1)*(idxFatherArr)}%)`}"
+        :style="{top: positionTopTime+ '%', bottom: positionBottomTime+ '%', left: `calc(${(100-50)/(lengthFatherArr-1)*(idxFatherArr)}%)`, width: `${(100/idxFatherArr+1)-(100-50)/(lengthFatherArr-1)*(idxFatherArr)}%`}"
         class="absolute bg-blue-500 border text-white flex items-center justify-center inset-x-0">
         <p>{{ startTimeFormat }} - {{ stopTimeFormat }}</p>
     </div>
@@ -65,6 +65,7 @@ const positionBottomTime = computed(() => {
     }
     return null;
 });
+
 </script>
 
 <style scoped>
