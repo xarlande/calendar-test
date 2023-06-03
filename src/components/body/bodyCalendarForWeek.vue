@@ -13,9 +13,9 @@
             <div :style="{top: `${getPositionArrowTime}%`}" class="w-full absolute bg-blue-400 h-0.5">
             </div>
             <BodyCalendarForWeekDaysColumn :get-all-hours="getAllHours"/>
-            <BodyCalendarForWeekItem v-for="item in getDaysForWeek" :key="item.id"
-                                     :get-all-hours="getAllHours"
-                                     :get-current-day="item"/>
+            <BodyCalendarForWeekItem
+                :get-all-hours="getAllHours"
+                :get-current-day="getSelectedDay"/>
         </div>
     </div>
 </template>
@@ -47,5 +47,6 @@ const getPositionArrowTime = computed(() => {
 const store = useStore();
 const getAllHours = computed(() => store.getAllHours);
 const getDaysForWeek = computed(() => store.getDaysForWeek);
+const getSelectedDay = computed(() => store.getSelectedDayFormat);
 const currentTypeShow = computed(() => store.currentTypeShow);
 </script>

@@ -181,8 +181,10 @@ export const useStore = defineStore('store', {
 
             return weekDays;
         },
-        getSelectedDay(): CalendarTypes.CalendarTime {
-            const currentDay = this.getSelectedTime.format('YYYY-MM-DD');
+        getSelectedDayFormat(state): CalendarTypes.CalendarTime {
+            const currentDay = moment()
+                .add(state.currentDay, 'days')
+                .format('YYYY-MM-DD');
             return {
                 day: currentDay,
             };

@@ -42,13 +42,32 @@ const stopTimeFormat = computed(() => {
     }
     return null;
 });
-const startTimeStamp = computed(() => moment('00:00', 'HH:mm')
-    .unix());
-const stopTimeStamp = computed(() => moment('23:59', 'HH:mm')
-    .unix());
-const differenceTimeStamp = computed(() => stopTimeStamp.value - startTimeStamp.value);
-const positionTopTime = computed(() => {
+const startTimeStamp = computed(() => {
     if (startTime.value) {
+        return moment
+            .unix(startTime.value)
+            .startOf('day')
+            .unix();
+    }
+    return null;
+});
+const stopTimeStamp = computed(() => {
+    if (startTime.value) {
+        return moment
+            .unix(startTime.value)
+            .endOf('day')
+            .unix();
+    }
+    return null;
+});
+const differenceTimeStamp = computed(() => {
+    if (startTimeStamp.value && stopTimeStamp.value) {
+        return stopTimeStamp.value - startTimeStamp.value;
+    }
+    return null;
+});
+const positionTopTime = computed(() => {
+    if (startTime.value && startTimeStamp.value && differenceTimeStamp.value) {
         const difference = startTime.value - startTimeStamp.value;
         const totalDifference = differenceTimeStamp.value;
         const request = (difference / totalDifference) * 100;
@@ -57,7 +76,7 @@ const positionTopTime = computed(() => {
     return null;
 });
 const positionBottomTime = computed(() => {
-    if (stopTime.value) {
+    if (stopTime.value && stopTimeStamp.value && differenceTimeStamp.value) {
         const difference = stopTimeStamp.value - stopTime.value;
         const totalDifference = differenceTimeStamp.value;
         const request = (difference / totalDifference) * 100;
