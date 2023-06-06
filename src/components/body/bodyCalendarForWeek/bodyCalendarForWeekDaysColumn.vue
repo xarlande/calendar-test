@@ -12,8 +12,9 @@
 
 <script lang="ts" setup>
 import { defineProps } from 'vue';
+import { CalendarTypes } from '@/types/calendar';
 
 defineProps<{
-  getAllHours: Array<{ id: number, time: string, currentTime: boolean }>
+  getAllHours: Array<CalendarTypes.TimeItem>
 }>();
 </script>

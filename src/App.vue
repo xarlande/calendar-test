@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { useStore } from '@/store/store';
-import { computed } from 'vue';
+import { computed, watch } from 'vue';
 import { TypeShowCalendar } from '@/enums/typeShowCalendar';
 import BodyCalendarForMonth from '@/components/body/bodyCalendarForMonth.vue';
 import HeaderCalendar from '@/components/header/headerCalendar.vue';
@@ -20,4 +20,12 @@ import ModalWindowsTime from '@/components/modal/modalWindowsTime.vue';
 const store = useStore();
 const currentTypeShow = computed(() => store.currentTypeShow);
 const stateModalWindow = computed(() => store.isModalWindowOpened);
+
+watch(stateModalWindow, () => {
+    if (stateModalWindow.value) {
+        document.body.classList.add('overflow-hidden');
+    } else {
+        document.body.classList.remove('overflow-hidden');
+    }
+});
 </script>

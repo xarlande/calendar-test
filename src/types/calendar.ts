@@ -6,6 +6,12 @@ export namespace CalendarTypes {
     startTime?: number;
     stopTime?: number;
   }
+
+  export interface TimeItem {
+    currentTime?: boolean,
+    id: number,
+    time: string,
+  }
 }
 
 export default {};

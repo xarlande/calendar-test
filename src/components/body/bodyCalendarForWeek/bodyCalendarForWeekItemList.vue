@@ -4,51 +4,23 @@
       &nbsp;
         </div>
         <div class="flex-auto relative flex flex-col">
-            <BodyCalendarForWeekTimeEvent v-for="(item, idx) in currentEvents"
-                                          :key="item.id" :idx-father-arr="idx"
-                                          :length-father-arr="currentEvents.length"
-                                          :time-event="item"/>
-            <div v-for="item in getAllHours" :key="item.id" class="border-b py-2 cursor-pointer"
-                 @click="openModal(item.time)">
-        &nbsp;
-            </div>
+            <BodyCalendarForWeekTimeEvent v-for="(item) in getAllHours"
+                                          :key="item.id"
+                                          :get-current-day="getCurrentDay"
+                                          :time-item="item"
+            />
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import { computed, defineProps } from 'vue';
+import { defineProps } from 'vue';
 import { CalendarTypes } from '@/types/calendar';
-import { useStore } from '@/store/store';
 import BodyCalendarForWeekTimeEvent
-    from '@/components/body/bodyCalendarForWeek/bodyCalendarForWeekItemList/bodyCalendarForWeekItem/bodyCalendarForWeekTimeEvent.vue';
-import moment from 'moment';
+    from '@/components/body/bodyCalendarForWeek/bodyCalendarForWeekItemList/bodyCalendarForWeekTimeEvent.vue';
 
-const props = defineProps<{
-  getAllHours: Array<{ id: number, time: string }>
+defineProps<{
+  getAllHours: Array<CalendarTypes.TimeItem>
   getCurrentDay: CalendarTypes.CalendarTime
 }>();
-
-const store = useStore();
-const currentEvents = computed(() => store.calendarEvents.filter((item) => item.day === props.getCurrentDay.day));
-const openModal = (time: string) => {
-    const startTime = moment(time, 'HH:mm')
-        .unix();
-    const stopTime = moment(time, 'HH:mm')
-        .add(1, 'hour')
-        .unix();
-
-    store.openModalWindow(props.getCurrentDay.day, startTime, stopTime);
-};
-// const areEventsIntersecting = (event1: CalendarTypes.CalendarTime, event2: CalendarTypes.CalendarTime): boolean | null => {
-//     if (event1.startTime && event1.stopTime && event2.startTime && event2.stopTime) {
-//         const start1 = moment.unix(event1.startTime);
-//         const end1 = moment.unix(event1.stopTime);
-//         const start2 = moment.unix(event2.startTime);
-//         const end2 = moment.unix(event2.stopTime);
-//
-//         return start1.isBefore(end2) && start2.isBefore(end1);
-//     }
-//     return null;
-// };
 </script>

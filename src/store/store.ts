@@ -11,40 +11,12 @@ interface State {
   modalData: CalendarTypes.CalendarTime | null;
 }
 
-// const areEventsIntersecting = (event1: CalendarTypes.CalendarTime, event2: CalendarTypes.CalendarTime): boolean | null => {
-//     if (event1.startTime && event1.stopTime && event2.startTime && event2.stopTime) {
-//         const start1 = moment.unix(event1.startTime);
-//         const end1 = moment.unix(event1.stopTime);
-//         const start2 = moment.unix(event2.startTime);
-//         const end2 = moment.unix(event2.stopTime);
-//
-//         return start1.isBefore(end2) && start2.isBefore(end1);
-//     }
-//     return null;
-// };
-
 export const useStore = defineStore('store', {
     state: (): State => ({
         currentDay: 0,
         currentTypeShow: TypeShowCalendar.TypeCalendar.Week,
         isModalWindowOpened: false,
-        calendarEvents: [{
-            day: '2023-05-31',
-            stopTime: 1685674800,
-            startTime: 1685671200,
-        }, {
-            day: '2023-05-31',
-            stopTime: 1685678400,
-            startTime: 1685671200,
-        }, {
-            day: '2023-05-31',
-            stopTime: 1685682000,
-            startTime: 1685678400,
-        }, {
-            day: '2023-05-31',
-            stopTime: 1685685600,
-            startTime: 1685682000,
-        }],
+        calendarEvents: [],
         modalData: null,
     }),
     getters: {
@@ -189,7 +161,7 @@ export const useStore = defineStore('store', {
                 day: currentDay,
             };
         },
-        getAllHours(): Array<{ id: number; time: string; currentTime: boolean }> {
+        getAllHours(): Array<CalendarTypes.TimeItem> {
             const allHours = [];
             let id = 0;
 
@@ -211,21 +183,6 @@ export const useStore = defineStore('store', {
 
             return allHours;
         },
-
-    // findIntersectingEvents(state): Array<CalendarTypes.CalendarTime> {
-    //     const intersectingEvents = [];
-    //
-    //     for (let i = 0; i < state.calendarEvents.length; i += 1) {
-    //         for (let j = 1; j < state.calendarEvents.length; i += 1) {
-    //             if (areEventsIntersecting(this.calendarEvents[i], this.calendarEvents[j]) === true) {
-    //                 intersectingEvents.push({
-    //                     ...this.calendarEvents[i],
-    //                 });
-    //             }
-    //         }
-    //     }
-    //     return intersectingEvents;
-    // },
     },
     actions: {
         incrementCurrentSelectData(): void {
@@ -291,10 +248,18 @@ export const useStore = defineStore('store', {
         },
         pushCalendarItems(): void {
             if (this.modalData) {
+                let id = 0;
+
                 this.calendarEvents.push(this.modalData);
 
                 this.calendarEvents.sort((a, b) => (a.startTime && b.startTime ? a.startTime - b.startTime : 1 - 1));
-
+                this.calendarEvents = this.calendarEvents.map((item: CalendarTypes.CalendarTime): CalendarTypes.CalendarTime => {
+                    id += 1;
+                    return {
+                        ...item,
+                        id,
+                    };
+                });
                 this.isModalWindowOpened = false;
             }
         },
