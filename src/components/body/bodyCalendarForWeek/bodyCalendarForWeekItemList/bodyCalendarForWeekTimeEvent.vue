@@ -51,7 +51,6 @@ const currentEventsLength = computed((): number => {
     }
     return 0;
 });
-
 const isCurrentEvents = computed((): boolean => !!currentEvents.value?.length);
 
 </script>
