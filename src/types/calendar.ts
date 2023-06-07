@@ -8,7 +8,6 @@ export namespace CalendarTypes {
   }
 
   export interface TimeItem {
-    currentTime?: boolean,
     id: number,
     time: string,
   }

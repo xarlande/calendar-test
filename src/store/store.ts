@@ -9,6 +9,7 @@ interface State {
   isModalWindowOpened: boolean;
   calendarEvents: Array<CalendarTypes.CalendarTime>;
   modalData: CalendarTypes.CalendarTime | null;
+  currentTimeForDay: moment.Moment;
 }
 
 export const useStore = defineStore('store', {
@@ -18,6 +19,7 @@ export const useStore = defineStore('store', {
         isModalWindowOpened: false,
         calendarEvents: [],
         modalData: null,
+        currentTimeForDay: moment(),
     }),
     getters: {
         getSelectedTime(state): moment.Moment {
@@ -165,18 +167,14 @@ export const useStore = defineStore('store', {
             const allHours = [];
             let id = 0;
 
-            const currentHour = moment(); // Отримуємо поточний час Moment.js
-
             for (let i = 0; i < 24; i += 1) {
                 const hour = moment('00:00', 'HH:mm')
                     .clone()
                     .add(i, 'hours');
-                const isCurrentHour = hour.isSame(currentHour, 'hour'); // Перевіряємо, чи є година поточною
 
                 allHours.push({
                     id,
                     time: hour.format('HH:mm'),
-                    currentTime: isCurrentHour,
                 });
                 id += 1;
             }
@@ -187,14 +185,20 @@ export const useStore = defineStore('store', {
     actions: {
         incrementCurrentSelectData(): void {
             let days: number;
-            if (this.currentTypeShow === 'month') {
+            switch (this.currentTypeShow) {
+            case TypeShowCalendar.TypeCalendar.Month:
                 days = this.getSelectedTime.clone()
                     .subtract(-1, 'month')
                     .daysInMonth();
-            } else if (this.currentTypeShow === 'week') {
+                break;
+            case TypeShowCalendar.TypeCalendar.Week:
                 days = 7;
-            } else {
+                break;
+            case TypeShowCalendar.TypeCalendar.Day:
                 days = 1;
+                break;
+            default:
+                throw Error('No find calendar type');
             }
             this.currentDay += days;
         },
@@ -267,6 +271,9 @@ export const useStore = defineStore('store', {
             if (this.modalData && !!value) {
                 this.modalData.day = value;
             }
+        },
+        updateCurrentTimeForDay(): void {
+            this.currentTimeForDay = moment();
         },
     },
 });

@@ -1,11 +1,10 @@
 <template>
-    <div class="max-w-[1200px] mx-auto border rounded p-2 select-none">
+    <div class="max-w-[1400px] mx-auto border rounded p-2 select-none">
         <HeaderCalendar/>
         <BodyCalendarForMonth v-if="currentTypeShow === TypeShowCalendar.TypeCalendar.Month"/>
         <BodyCalendarForWeek v-else/>
         <ModalWindowsTime v-if="stateModalWindow"/>
     </div>
-
 </template>
 
 <script lang="ts" setup>
@@ -28,4 +27,10 @@ watch(stateModalWindow, () => {
         document.body.classList.remove('overflow-hidden');
     }
 });
+
+setInterval(() => {
+    store.updateCurrentTimeForDay();
+}, 1000);
+
+document.documentElement.setAttribute('lang', 'uk');
 </script>

@@ -16,6 +16,7 @@ import { CalendarTypes } from '@/types/calendar';
 import { useStore } from '@/store/store';
 import BodyCalendarForWeekItem
     from '@/components/body/bodyCalendarForWeek/bodyCalendarForWeekItemList/bodyCalendarForWeekTimeEvent/bodyCalendarForWeekItem.vue';
+import { TypeShowCalendar } from '@/enums/typeShowCalendar';
 
 const props = defineProps<{
   timeItem: CalendarTypes.TimeItem,
@@ -32,16 +33,22 @@ const store = useStore();
 const openModal = (): void => {
     store.openModalWindow(props.getCurrentDay.day, startTimeMoment, stopTimeMoment);
 };
+const currentTypeShow = computed(() => store.currentTypeShow);
 const isCurrentTime = (item: number): boolean => startTimeMoment <= item && item < stopTimeMoment;
 
 const currentEvents = computed((): Array<CalendarTypes.CalendarTime> | null => {
     if (props.getCurrentDay?.day) {
-        return store.calendarEvents.filter((item) => {
+        const storeFilteredEvents = store.calendarEvents.filter((item) => {
             if (item.startTime) {
                 return item.day === props.getCurrentDay.day && isCurrentTime(item.startTime);
             }
             return false;
         });
+
+        if (currentTypeShow.value === TypeShowCalendar.TypeCalendar.Week) {
+            return storeFilteredEvents.length > 3 ? storeFilteredEvents.slice(0, 3) : storeFilteredEvents;
+        }
+        return storeFilteredEvents;
     }
     return null;
 });
