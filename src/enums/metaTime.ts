@@ -1,13 +1,13 @@
 export namespace MetaTime {
 
   export enum WeekDays {
-    monday = 'Понеділок',
-    tuesday = 'Вівторок',
-    wednesday = 'Середа',
-    thursday = 'Четвер',
-    friday = 'Пятниця',
-    saturday = 'Субота',
-    sunday = 'Неділя'
+    Monday = 'Понеділок',
+    Tuesday = 'Вівторок',
+    Wednesday = 'Середа',
+    Thursday = 'Четвер',
+    Friday = 'Пятниця',
+    Saturday = 'Субота',
+    Sunday = 'Неділя'
   }
 
   export enum YearMonths {

@@ -1,7 +1,7 @@
 <template>
     <div
-        :style="{height: `${heightItem}%`, left: `calc(${isLastItem&&eventsLength>1 ? `auto` : (100)/(eventsLength)*(idxCurrentItem)+4.5}%)`, width: `${widthItem}%`, zIndex: `${idxCurrentItem+1}`, right: `calc(${isLastItem ? 4.5 : 'auto'}%)`, top: `${topPosition}%`}"
-        class="absolute bg-blue-400 text-white top-0 flex justify-center items-center shadow-lg rounded">
+        :style="{height: `${heightItem}%`, left: `${leftPosition}%`, width: `${widthItem}%`, zIndex: `${idxCurrentItem+1}`, top: `${topPosition}%`}"
+        class="absolute bg-blue-400 text-white flex justify-center items-center shadowBox shadow-black rounded">
         <p v-if="currentTypeShow === TypeShowCalendar.TypeCalendar.Day || eventsLength <= 1">
             {{ startTimeFormat }} - {{ stopTimeFormat }}
         </p>
@@ -69,9 +69,12 @@ const maxCurrentHour = computed((): number | null => {
     return null;
 });
 
-const isLastItem = computed(() => props.eventsLength - 1 === props.idxCurrentItem);
-const widthItem = computed(() => (props.eventsLength === 1 ? 91 : 91 / (props.eventsLength + 1)));
+const widthItem = computed(() => (props.eventsLength === 1 ? 100 : 100 / (props.eventsLength + 1)));
+const leftPosition = computed(() => {
+    const aditionalSpace = widthItem.value / (props.eventsLength - 1);
 
+    return (widthItem.value + aditionalSpace) * props.idxCurrentItem;
+});
 const topPosition = computed(() => {
     if (minCurrentHour.value && maxCurrentHour.value && startTime.value) {
         const startTimeLoc = moment.unix(startTime.value)
@@ -94,22 +97,10 @@ const heightItem = computed((): number | null => {
     }
     return null;
 });
-// const leftPosition = computed(() => {
-//     if (props.eventsLength === 2) {
-//         return '0%';
-//     }
-//     if (isLastItem.value) {
-//         return 'auto';
-//     }
-//
-//     return null;
-// });
-// const rigthPosition = computed(() => {
-//     if (!isLastItem.value) {
-//         return 'auto';
-//     }
-//
-//     return null;
-// });
 
 </script>
+<style lang="css" scoped>
+.shadowBox {
+  box-shadow: 0 0 15px 0 rgba(0, 0, 0, 0.75);
+}
+</style>
