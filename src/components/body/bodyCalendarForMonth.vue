@@ -4,7 +4,6 @@
             <p v-for="item in weekDaysArr" :key="item" class="border">{{ item }}</p>
             <BodyCalendarMonthItem v-for="item in getDaysForMount" :key="item.id" :calendar-data="item"/>
         </div>
-
     </div>
 </template>
 <script lang="ts" setup>

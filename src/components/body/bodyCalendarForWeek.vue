@@ -3,7 +3,7 @@
         <BodyCalendarForWeekNameDays/>
         <div v-if="currentTypeShow === TypeShowCalendar.TypeCalendar.Week" class="flex relative">
             <div :style="{top: `${getPositionArrowTime}%`}"
-                 class="w-full absolute bg-red-400 h-0.5 z-40 mt-[6px]">
+                 class="w-full absolute bg-red-400 h-0.5 z-40 mt-[1%]">
             </div>
             <BodyCalendarForWeekDaysColumn :get-all-hours="getAllHours"/>
             <BodyCalendarForWeekItem v-for="item in getDaysForWeek" :key="item.id"
@@ -23,7 +23,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed } from 'vue';
+import { computed, onUnmounted } from 'vue';
 import { useStore } from '@/store/store';
 import BodyCalendarForWeekDaysColumn
     from '@/components/body/bodyCalendarForWeek/bodyCalendarForWeekDaysColumn.vue';
@@ -42,6 +42,11 @@ const getDaysForWeek = computed(() => store.getDaysForWeek);
 const getSelectedDay = computed(() => store.getSelectedDayFormat);
 const currentTypeShow = computed(() => store.currentTypeShow);
 const currentTimeForDay = computed(() => store.currentTimeForDay);
+
+const updateTimeForStore = setInterval(() => {
+    store.updateCurrentTimeForDay();
+}, 1000);
+onUnmounted(() => clearInterval(updateTimeForStore));
 
 const getPositionArrowTime = computed((): number => {
     const maxTimeForDay = moment('23:59', 'HH:mm');

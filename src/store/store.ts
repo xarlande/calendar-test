@@ -17,7 +17,17 @@ export const useStore = defineStore('store', {
         currentDay: 0,
         currentTypeShow: TypeShowCalendar.TypeCalendar.Week,
         isModalWindowOpened: false,
-        calendarEvents: [],
+        calendarEvents: [{
+            day: '2023-06-04',
+            stopTime: 1686178800,
+            startTime: 1686175200,
+            id: 1,
+        }, {
+            day: '2023-06-04',
+            stopTime: 1686186600,
+            startTime: 1686183000,
+            id: 2,
+        }],
         modalData: null,
         currentTimeForDay: moment(),
     }),

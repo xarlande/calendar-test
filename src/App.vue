@@ -28,9 +28,5 @@ watch(stateModalWindow, () => {
     }
 });
 
-setInterval(() => {
-    store.updateCurrentTimeForDay();
-}, 1000);
-
 document.documentElement.setAttribute('lang', 'uk');
 </script>

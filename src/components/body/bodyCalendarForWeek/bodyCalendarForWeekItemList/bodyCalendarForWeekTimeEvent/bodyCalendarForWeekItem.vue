@@ -1,8 +1,8 @@
 <template>
     <div
-        :style="{bottom: `${-bottomPosition}%`, left: `calc(${isLastItem ? `auto` : (100)/(eventsLength)*(idxCurrentItem)}%)`, width: `${widthItem}%`, zIndex: `${idxCurrentItem+1}`, right: `calc(${isLastItem? 0 : 'auto'}%)`, top: `${topPosition}%`}"
+        :style="{height: `${heightItem}%`, left: `calc(${isLastItem&&eventsLength>1 ? `auto` : (100)/(eventsLength)*(idxCurrentItem)+4.5}%)`, width: `${widthItem}%`, zIndex: `${idxCurrentItem+1}`, right: `calc(${isLastItem ? 4.5 : 'auto'}%)`, top: `${topPosition}%`}"
         class="absolute bg-blue-400 text-white top-0 flex justify-center items-center shadow-lg rounded">
-        <p v-if="eventsLength <= 1">
+        <p v-if="currentTypeShow === TypeShowCalendar.TypeCalendar.Day || eventsLength <= 1">
             {{ startTimeFormat }} - {{ stopTimeFormat }}
         </p>
         <p v-else>
@@ -16,12 +16,17 @@ import { CalendarTypes } from '@/types/calendar';
 import { computed, defineProps } from 'vue';
 import { convertTime } from '@/methods/convertTime';
 import moment from 'moment';
+import { TypeShowCalendar } from '@/enums/typeShowCalendar';
+import { useStore } from '@/store/store';
 
 const props = defineProps<{
   timeEvent: CalendarTypes.CalendarTime,
   eventsLength: number,
   idxCurrentItem: number
 }>();
+
+const store = useStore();
+const currentTypeShow = computed(() => store.currentTypeShow);
 
 const startTime = computed((): CalendarTypes.CalendarTime['startTime'] | null => {
     if (props.timeEvent?.startTime) {
@@ -64,33 +69,47 @@ const maxCurrentHour = computed((): number | null => {
     return null;
 });
 
+const isLastItem = computed(() => props.eventsLength - 1 === props.idxCurrentItem);
+const widthItem = computed(() => (props.eventsLength === 1 ? 91 : 91 / (props.eventsLength + 1)));
+
 const topPosition = computed(() => {
     if (minCurrentHour.value && maxCurrentHour.value && startTime.value) {
-        const res = maxCurrentHour.value - minCurrentHour.value;
-        const resStartTime = startTime.value - minCurrentHour.value;
+        const startTimeLoc = moment.unix(startTime.value)
+            .minutes();
+        const minCurrentHourLoc = moment.unix(minCurrentHour.value)
+            .minutes();
+        const diffMinutes = startTimeLoc - minCurrentHourLoc;
 
-        if (resStartTime) {
-            return `${(res / resStartTime) * 10}`;
-        }
-        return 0;
+        return `${(diffMinutes / 60) * 100}`;
     }
     return null;
 });
-
-const bottomPosition = computed((): number | null => {
+const heightItem = computed((): number | null => {
     if (startTime.value && stopTime.value) {
-        if (topPosition.value) {
-            return 0;
-        }
         const startMoment = moment.unix(startTime.value);
         const stopMoment = moment.unix(stopTime.value);
         const diffHours = stopMoment.diff(startMoment, 'minutes');
-        return (diffHours / 60 * 100) - 100;
+
+        return ((diffHours / 60) * 102.25);
     }
     return null;
 });
-
-const isLastItem = computed(() => props.eventsLength - 1 === props.idxCurrentItem);
-const widthItem = computed(() => (props.eventsLength === 1 ? 100 : 100 / (props.eventsLength + 1)));
+// const leftPosition = computed(() => {
+//     if (props.eventsLength === 2) {
+//         return '0%';
+//     }
+//     if (isLastItem.value) {
+//         return 'auto';
+//     }
+//
+//     return null;
+// });
+// const rigthPosition = computed(() => {
+//     if (!isLastItem.value) {
+//         return 'auto';
+//     }
+//
+//     return null;
+// });
 
 </script>
